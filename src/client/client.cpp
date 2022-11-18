@@ -1,102 +1,108 @@
-#include "client.hpp"
+#include <fstream>
+#include "tcp_lib.hpp"
+#include "operations.hpp"
 
-namespace CLIENT
-{
-    void error(std::string msg)
-    {
-        std::cerr << msg << '\n';
-        exit(EXIT_FAILURE);
-    }
+// namespace CLIENT
+// {
+//     void error(std::string msg)
+//     {
+//         std::cerr << msg << '\n';
+//         exit(EXIT_FAILURE);
+//     }
 
-    void connect(int &sock)
-    {
-        struct sockaddr_in server;
-        sock = socket(AF_INET, SOCK_STREAM, 0);
-        if (sock < 0)
-        {
-            error("socket");
-        }
+//     void connect(int &sock, const char* addr, int port)
+//     {
+//         struct sockaddr_in server;
+//         sock = socket(AF_INET, SOCK_STREAM, 0);
+//         if (sock < 0)
+//         {
+//             error("socket");
+//         }
 
-        server.sin_addr.s_addr = inet_addr("127.0.0.1");
-        server.sin_family = AF_INET;
-        server.sin_port = 7777;
+//         //server.sin_addr.s_addr = inet_addr("127.0.0.1");
+//         server.sin_addr.s_addr = inet_addr(addr);
+//         server.sin_family = AF_INET;
+//         // server.sin_port = 7777;
+//         server.sin_port = port;
 
-        if (connect(sock, (const struct sockaddr *)&server, sizeof(server)) < 0)
-        {
-            error("connect");
-        }
-    }
+//         if (connect(sock, (const struct sockaddr *)&server, sizeof(server)) < 0)
+//         {
+//             error("connect");
+//         }
+//     }
 
-    void send_msg(char *n)
-    {
-        int size = send(sock, n, strlen(n), 0);
-        if (size < 0)
-        {
-            error("send");
-        }
-    }
+//     void send_msg(char *n)
+//     {
+//         int size = send(sock, n, strlen(n), 0);
+//         if (size < 0)
+//         {
+//             error("send");
+//         }
+//     }
 
-    void send_msg(const char *n)
-    {
-        int size = send(sock, n, strlen(n), 0);
-        if (size < 0)
-        {
-            error("send");
-        }
-    }
+//     void send_msg(const char *n)
+//     {
+//         int size = send(sock, n, strlen(n), 0);
+//         if (size < 0)
+//         {
+//             error("send");
+//         }
+//     }
 
-    void send_msg(std::string n)
-    {
-        int size = send(sock, n.c_str(), strlen(n.c_str()), 0);
-        if (size < 0)
-        {
-            error("send");
-        }
-    }
+//     void send_msg(std::string n)
+//     {
+//         int size = send(sock, n.c_str(), strlen(n.c_str()), 0);
+//         if (size < 0)
+//         {
+//             error("send");
+//         }
+//     }
 
-    template <typename T>
-    void send_msg(T n)
-    {
-        int size = send(sock, &n, sizeof(n), 0);
-        if (size < 0)
-        {
-            error("send");
-        }
-    }
+//     template <typename T>
+//     void send_msg(T n)
+//     {
+//         int size = send(sock, &n, sizeof(n), 0);
+//         if (size < 0)
+//         {
+//             error("send");
+//         }
+//     }
 
-    std::string recv_msg()
-    {
-        char buf[RECV_BUFF_SIZE];
-        memset(buf, 0, sizeof(buf));
-        int size = recv(sock, buf, RECV_BUFF_SIZE, 0);
-        if (size == -1)
-        {
-            error("size");
-        }
+//     std::string recv_msg()
+//     {
+//         char buf[RECV_BUFF_SIZE];
+//         memset(buf, 0, sizeof(buf));
+//         int size = recv(sock, buf, RECV_BUFF_SIZE, 0);
+//         if (size == -1)
+//         {
+//             error("size");
+//         }
 
-        return std::string(buf);
-    }
+//         return std::string(buf);
+//     }
 
-    template <typename T>
-    void recv_msg(T &msg)
-    {
-        if (recv(sock, &msg, sizeof(msg), 0) < 0)
-        {
-            error("recv");
-        }
-    }
-}
+//     template <typename T>
+//     void recv_msg(T &msg)
+//     {
+//         if (recv(sock, &msg, sizeof(msg), 0) < 0)
+//         {
+//             error("recv");
+//         }
+//     }
+// }
+
+extern int sock;
+extern int sock_client;
 
 int main()
 {
     srand(time(NULL));
     signal(SIGINT, handle_shutdown);
 
-    char send_buff[SEND_BUFF_SIZE];
     char login[SEND_BUFF_SIZE];
     char recv_buff[RECV_BUFF_SIZE];
 
-    CLIENT::connect(sock);
+    CLIENT::connect(sock, "127.0.0.1", 7777);
     long int n = 0;
     long int v = 0;
     long int y = 0;

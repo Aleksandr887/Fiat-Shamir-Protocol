@@ -21,25 +21,25 @@
 #define SEND_BUFF_SIZE 256
 #define RECV_BUFF_SIZE 256
 
-int sock;
-int sock_client;
+// int sock;
+// int sock_client;
 
-void handle_shutdown(int sig)
-{
-    printf("\nShutdown\n");
-    close(sock);
-    close(sock_client);
-    exit(EXIT_SUCCESS);
-}
+// void handle_shutdown(int sig)
+// {
+//     printf("\nShutdown\n");
+//     close(sock);
+//     close(sock_client);
+//     exit(EXIT_SUCCESS);
+// }
 
-void error(std::string msg)
-{
-    std::cerr << msg << ": " << strerror(errno) << '\n';
-    exit(EXIT_FAILURE);
-}
+// void error(std::string msg)
+// {
+//     std::cerr << msg << ": " << strerror(errno) << '\n';
+//     exit(EXIT_FAILURE);
+// }
 
-void reaper(int sig)
-{
-    int status;
-    while (wait3(&status, WNOHANG, (struct rusage *)0) >= 0);
-}
+// void reaper(int sig)
+// {
+//     int status;
+//     while (wait3(&status, WNOHANG, (struct rusage *)0) >= 0);
+// }

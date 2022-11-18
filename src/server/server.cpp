@@ -1,115 +1,118 @@
 #include "operations.hpp"
-#include "server.hpp"
+#include "tcp_lib.hpp"
+#include <map>
 
-namespace SERVER
-{
-    void error(std::string msg)
-    {
-        std::cerr << msg << ": " << strerror(errno) << '\n';
-        exit(EXIT_FAILURE);
-    }
+// namespace SERVER
+// {
+//     void error(std::string msg)
+//     {
+//         std::cerr << msg << ": " << strerror(errno) << '\n';
+//         exit(EXIT_FAILURE);
+//     }
 
-    int creat(int &sock)
-    {
-        struct sockaddr_in server;
-        sock = socket(AF_INET, SOCK_STREAM, 0);
-        if (sock < 0)
-        {
-            error("socket");
-        }
-        server.sin_addr.s_addr = inet_addr("127.0.0.1");
-        server.sin_family = AF_INET;
-        server.sin_port = 7777;
-        int reuseaddr_on = 1;
-        if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR,
-                       &reuseaddr_on, sizeof(reuseaddr_on)) < 0)
-        {
-            error("setsockopt");
-        }
-        if (bind(sock, (const struct sockaddr *)&server, sizeof(server)) < 0)
-        {
-            error("bind");
-        }
-        return sock;
-    }
+//     int creat(int &sock, const char* addr, int port)
+//     {
+//         struct sockaddr_in server;
+//         sock = socket(AF_INET, SOCK_STREAM, 0);
+//         if (sock < 0)
+//         {
+//             error("socket");
+//         }
+//         // server.sin_addr.s_addr = inet_addr("127.0.0.1");
+//         server.sin_addr.s_addr = inet_addr(addr);
+//         server.sin_family = AF_INET;
+//         // server.sin_port = 7777;
+//         server.sin_port = port;
+//         int reuseaddr_on = 1;
+//         if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR,
+//                        &reuseaddr_on, sizeof(reuseaddr_on)) < 0)
+//         {
+//             error("setsockopt");
+//         }
+//         if (bind(sock, (const struct sockaddr *)&server, sizeof(server)) < 0)
+//         {
+//             error("bind");
+//         }
+//         return sock;
+//     }
 
-    void start(int sock)
-    {
-        if (listen(sock, 5) < 0)
-        {
-            error("listen");
-        }
-    }
+//     void start(int sock)
+//     {
+//         if (listen(sock, 5) < 0)
+//         {
+//             error("listen");
+//         }
+//     }
 
-    void connection_accept(int sock, int &sock_client)
-    {
-        sock_client = accept(sock, 0, 0);
-        if (sock_client < 0)
-        {
-            error("accept");
-        }
-    }
+//     void connection_accept(int sock, int &sock_client)
+//     {
+//         sock_client = accept(sock, 0, 0);
+//         if (sock_client < 0)
+//         {
+//             error("accept");
+//         }
+//     }
 
-    void send_msg(char *n)
-    {
-        int size = send(sock_client, n, strlen(n), 0);
-        if (size < 0)
-        {
-            error("send");
-        }
-    }
+//     void send_msg(char *n)
+//     {
+//         int size = send(sock_client, n, strlen(n), 0);
+//         if (size < 0)
+//         {
+//             error("send");
+//         }
+//     }
 
-    void send_msg(const char *n)
-    {
-        int size = send(sock_client, n, strlen(n), 0);
-        if (size < 0)
-        {
-            error("send");
-        }
-    }
+//     void send_msg(const char *n)
+//     {
+//         int size = send(sock_client, n, strlen(n), 0);
+//         if (size < 0)
+//         {
+//             error("send");
+//         }
+//     }
 
-    void send_msg(std::string n)
-    {
-        int size = send(sock_client, n.c_str(), strlen(n.c_str()), 0);
-        if (size < 0)
-        {
-            error("send");
-        }
-    }
+//     void send_msg(std::string n)
+//     {
+//         int size = send(sock_client, n.c_str(), strlen(n.c_str()), 0);
+//         if (size < 0)
+//         {
+//             error("send");
+//         }
+//     }
 
-    template <typename T>
-    void send_msg(T n)
-    {
-        int size = send(sock_client, &n, sizeof(n), 0);
-        if (size < 0)
-        {
-            error("send");
-        }
-    }
+//     template <typename T>
+//     void send_msg(T n)
+//     {
+//         int size = send(sock_client, &n, sizeof(n), 0);
+//         if (size < 0)
+//         {
+//             error("send");
+//         }
+//     }
 
-    std::string recv_msg()
-    {
-        char buf[RECV_BUFF_SIZE];
-        memset(buf, 0, sizeof(buf));
-        int size = recv(sock_client, buf, RECV_BUFF_SIZE, 0);
-        if (size == -1)
-        {
-            error("size");
-        }
+//     std::string recv_msg()
+//     {
+//         char buf[RECV_BUFF_SIZE];
+//         memset(buf, 0, sizeof(buf));
+//         int size = recv(sock_client, buf, RECV_BUFF_SIZE, 0);
+//         if (size == -1)
+//         {
+//             error("size");
+//         }
 
-        return std::string(buf);
-    }
+//         return std::string(buf);
+//     }
 
-    template <typename T>
-    void recv_msg(T &msg)
-    {
-        int size = recv(sock_client, &msg, sizeof(msg), 0);
-        if (size == -1)
-        {
-            error("size");
-        }
-    }
-}
+//     template <typename T>
+//     void recv_msg(T &msg)
+//     {
+//         int size = recv(sock_client, &msg, sizeof(msg), 0);
+//         if (size == -1)
+//         {
+//             error("size");
+//         }
+//     }
+// }
 
 
 // Класс, который хранит все вспомогательные элементы
@@ -179,6 +182,9 @@ public:
     }
 };
 
+extern int sock;
+extern int sock_client;
+
 int main()
 {
     signal(SIGINT, handle_shutdown);
@@ -189,7 +195,7 @@ int main()
     long int n = data.n();
     std::string login;
     int action;
-    SERVER::creat(sock);
+    SERVER::creat(sock, "127.0.0.1", 7777);
     SERVER::start(sock);
 
     while (1)
@@ -197,11 +203,11 @@ int main()
         SERVER::connection_accept(sock, sock_client);
         SERVER::send_msg(n);
         std::cout << "n: " << n << '\n';
-        SERVER::send_msg("Enter '0' to register, '1' to log in: ");
+        SERVER::send_msg("enter '0' to register, '1' to log in: ");
         action = 0; // 0 - для регистрации, 1 - для входа(для зарегистрированных пользователей)
         SERVER::recv_msg(action);
         // Просим пользователя ввести логин. Он нужен как для регистрации, так и для авторизации
-        SERVER::send_msg("Enter your Login: ");
+        SERVER::send_msg("enter your login: ");
         // Получаем логин от пользователя
         login = SERVER::recv_msg();
 
@@ -210,8 +216,8 @@ int main()
             // Вход в систему
             if (!data.exists(login))
             {
-                std::cout << "This user does not exist\n";
-                SERVER::send_msg("This user does not exist");
+                std::cout << "this user does not exist\n";
+                SERVER::send_msg("this user does not exist");
                 close(sock_client);
                 continue;
             }
@@ -232,7 +238,7 @@ int main()
                 data.set_x(x);
                 if (!data.check(login))
                 {
-                    SERVER::send_msg("Access denied");
+                    SERVER::send_msg("access denied");
                     close(sock_client);
                     ag = 0;
                     break;
@@ -253,7 +259,7 @@ int main()
                 ag = 2;
                 continue;
             }
-            SERVER::send_msg("Access granted");
+            SERVER::send_msg("access granted");
             close(sock_client);
         }
         else
@@ -263,15 +269,15 @@ int main()
             // Проверяем, не занят ли такой логин уже
             if (data.exists(login))
             {
-                SERVER::send_msg("This login already taken");
+                SERVER::send_msg("this login already taken");
                 close(sock_client);
                 continue;
             }
-            SERVER::send_msg("Getting your open key...");
+            SERVER::send_msg("getting your open key...");
             long int v = 0;
             SERVER::recv_msg(v);
             data.register_new_user(login, v);
-            SERVER::send_msg("You're successfully registered!");
+            SERVER::send_msg("you're successfully registered!");
             close(sock_client);
         }
         close(sock_client);

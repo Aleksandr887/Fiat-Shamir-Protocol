@@ -17,22 +17,22 @@
 #include <iostream>
 #include <string>
 
-#define NUM_OF_CHECKS 20
-#define SEND_BUFF_SIZE 256
-#define RECV_BUFF_SIZE 256
+// #define NUM_OF_CHECKS 20
+// #define SEND_BUFF_SIZE 256
+// #define RECV_BUFF_SIZE 256
 
-int sock;
-int sock_client;
+// int sock;
+// int sock_client;
 
-void handle_shutdown(int sig)
-{
-    printf("\nShutdown\n");
-    close(sock);
-    exit(EXIT_SUCCESS);
-}
+// void handle_shutdown(int sig)
+// {
+//     printf("\nShutdown\n");
+//     close(sock);
+//     exit(EXIT_SUCCESS);
+// }
 
-void error(std::string msg)
-{
-    std::cerr << msg << '\n';
-    exit(EXIT_FAILURE);
-}
+// void error(std::string msg)
+// {
+//     std::cerr << msg << '\n';
+//     exit(EXIT_FAILURE);
+// }

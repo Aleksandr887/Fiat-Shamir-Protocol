@@ -2,12 +2,12 @@
 
 BUILD_SERVER_DIR = build/server
 BUILD_CLIENT_DIR = build/client
-BUILD_LIB_DIR = build/lib
+BUILD_LIB_DIR = build/libs
 BIN_SERVER_DIR = bin/server
 BIN_CLIENT_DIR = bin/client
 SRC_SERVER_DIR = src/server
 SRC_CLIENT_DIR = src/client
-SRC_LIB_DIR = src/lib
+SRC_LIB_DIR = src/libs
 CC = g++
 
 all: $(BIN_SERVER_DIR)/server $(BIN_CLIENT_DIR)/client

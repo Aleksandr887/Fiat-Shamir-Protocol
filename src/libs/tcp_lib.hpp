@@ -19,21 +19,22 @@ namespace CLIENT
     void send_msg(char *n);
     void send_msg(const char *n);
     void send_msg(std::string n);
+
     template <typename T>
     void send_msg(T n)
     {
         int size = send(sock, &n, sizeof(n), 0);
-        if (size < 0)
-        {
+        if (size < 0) {
             error("send");
         }
     }
+
     std::string recv_msg();
+
     template <typename T>
     void recv_msg(T &msg)
     {
-        if (recv(sock, &msg, sizeof(msg), 0) < 0)
-        {
+        if (recv(sock, &msg, sizeof(msg), 0) < 0) {
             error("recv");
         }
     }
@@ -42,28 +43,29 @@ namespace CLIENT
 namespace SERVER
 {
     void error(std::string msg);
-    int creat(int &sock, const char* addr, int port);
+    int creat(int &sock, const char *addr, int port);
     void start(int sock);
     void connection_accept(int sock, int &sock_client);
     void send_msg(char *n);
     void send_msg(const char *n);
     void send_msg(std::string n);
+
     template <typename T>
     void send_msg(T n)
     {
         int size = send(sock_client, &n, sizeof(n), 0);
-        if (size < 0)
-        {
+        if (size < 0) {
             error("send");
         }
     }
+
     std::string recv_msg();
+
     template <typename T>
     void recv_msg(T &msg)
     {
         int size = recv(sock_client, &msg, sizeof(msg), 0);
-        if (size == -1)
-        {
+        if (size == -1) {
             error("size");
         }
     }
